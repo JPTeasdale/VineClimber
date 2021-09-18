@@ -26,7 +26,7 @@ func get_swap_transform():
 		var test_transform: Transform2D = player.global_transform.orthonormalized()
 		test_transform = test_transform.rotated(-test_transform.get_rotation())
 		test_transform = test_transform.scaled(Vector2(-1, 1))
-		test_transform = test_transform.rotated(player.rotation)
+		test_transform = test_transform.rotated(player.global_rotation)
 
 		var test_move = facing_dir * (d + 18)
 		test_transform.origin = player.global_position + test_move
@@ -55,29 +55,36 @@ func physics_update(delta: float) -> void:
 	var normal = get_collision_normal()
 	if not normal:
 		state_machine.transition_to("Air")
-		
-	player.look_at(player.position - normal)
-	player.move_and_collide(player.get_hand_collision_point() - player.hand.global_position)
+	
+	var hand_collision = player.get_hand_collision_point()
+	var foot_collision = player.get_foot_collision_point()
+	player.global_position = player.global_position + (hand_collision - player.hand.global_position)
+	player.look_at(player.global_position - normal)
+	
+	var a_over_h = (player.hand.position - player.foot.position).length()/(hand_collision - foot_collision).length()
+	var rotation_angle = acos(a_over_h)
+	if false and not is_nan(rotation_angle):
+		player.rotation = -rotation_angle
+
+	
 	player.velocity = player.speed_climb * input_direction_y * player.get_facing_dir() * normal.tangent()
 	player.velocity = player.move_and_slide(player.velocity, Vector2.UP)
 	
 	if is_on_vine():
 		player.get_hand_collider().pull(get_collision_normal())
-	
-	if sign(input_direction_x):
-		if sign(input_direction_x) != player.get_facing_dir():
-			player.look_at(player.position + Vector2(player.get_facing_dir(), 0))
-			state_machine.transition_to("Air", {do_jump= true})
-			player.flip_facing_dir()
-			return
-		elif is_on_vine() && $Cooldown.is_stopped():
+		if sign(input_direction_x) == player.get_facing_dir() && $Cooldown.is_stopped():
 			var st = get_swap_transform()
 			if st:
 				state_machine.transition_to("ClimbSwap", {transform = st})
 				return
+				
+	if Input.is_action_just_pressed("jump"):
+		player.reset_rotation()
+		state_machine.transition_to("Air", {do_jump=true})
+		player.flip_facing_dir()
 	
 	if not player.can_climb():
-		player.look_at(player.position + Vector2(player.get_facing_dir(), 0))
+		player.reset_rotation()
 		var msg = {}
 		if player.velocity.y < 0 && player.foot_ray.is_colliding():
 			msg.do_jump = true

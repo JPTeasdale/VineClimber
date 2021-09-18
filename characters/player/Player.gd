@@ -13,8 +13,15 @@ onready var hand: Position2D = $Hand
 onready var foot: Position2D = $Foot
 onready var foot_ray: RayCast2D = $FootRay
 
+func _ready():
+	set_meta('type', 'player')
+
 func can_climb() -> bool:
-	return $HandRay1.is_colliding() && $FootRay.is_colliding()
+	return $HandRay1.is_colliding() && (
+		( 
+			$HandRay1.get_collider().has_meta('type') && $HandRay1.get_collider().get_meta('type') == 'vine'
+		) || $FootRay.is_colliding()
+	)
 	
 func get_facing_dir() -> float:
 	return sign(scale.y)
@@ -28,8 +35,14 @@ func get_vine_collision_normal() -> Vector2:
 		$HandRay3.get_collision_normal()) + 
 		$FootRay.get_collision_normal()).normalized()
 		
+func hand_to_foot() -> float:
+	return ($Foot.position - $Hand.position).length()
+		
 func get_hand_collision_point() -> Vector2:
 	return $HandRay1.get_collision_point() 
+	
+func get_foot_collision_point() -> Vector2:
+	return $FootRay.get_collision_point() 
 	
 func get_hand_collider() -> Node2D:
 	return $HandRay1.get_collider() 
@@ -43,4 +56,11 @@ func update_facing_dir():
 	if sign(input_direction_x) && input_direction_x != get_facing_dir():
 		flip_facing_dir()
 	
+func reset_rotation():
+	look_at(global_position + Vector2(get_facing_dir(), 0))
 		
+func _draw():
+	draw_line(Vector2.ZERO, Vector2(get_facing_dir() * 8, 0), Color.red, 3)
+
+func _process(delta):
+	update()

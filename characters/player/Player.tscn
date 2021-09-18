@@ -10,8 +10,9 @@
 [ext_resource path="res://characters/player/assets/player-run.png" type="Texture" id=8]
 [ext_resource path="res://characters/player/scripts/states/ClimbSwapState.gd" type="Script" id=9]
 
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 7, 13 )
+[sub_resource type="CapsuleShape2D" id=1]
+radius = 7.0
+height = 16.0
 
 [sub_resource type="Animation" id=2]
 resource_name = "air"
@@ -54,6 +55,30 @@ tracks/2/keys = {
 "update": 1,
 "values": [ 8 ]
 }
+tracks/3/type = "value"
+tracks/3/path = NodePath(".:collision_mask")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 7 ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath(".:collision_layer")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 1 ]
+}
 
 [sub_resource type="Animation" id=3]
 loop = true
@@ -71,7 +96,7 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 3 ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("CollisionShape2D:shape")
+tracks/1/path = NodePath("Sprite:texture")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -80,22 +105,22 @@ tracks/1/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ SubResource( 1 ) ]
+"values": [ ExtResource( 1 ) ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("CollisionShape2D:shape:extents")
+tracks/2/path = NodePath("Sprite:hframes")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0, 0.25, 0.5, 0.75 ),
-"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ Vector2( 7, 13 ), Vector2( 7, 15 ), Vector2( 7, 13 ), Vector2( 7, 15 ) ]
+"values": [ 4 ]
 }
 tracks/3/type = "value"
-tracks/3/path = NodePath("Sprite:texture")
+tracks/3/path = NodePath(".:collision_mask")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
@@ -104,10 +129,10 @@ tracks/3/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ ExtResource( 1 ) ]
+"values": [ 3 ]
 }
 tracks/4/type = "value"
-tracks/4/path = NodePath("Sprite:hframes")
+tracks/4/path = NodePath(".:collision_layer")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/imported = false
@@ -116,7 +141,7 @@ tracks/4/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ 4 ]
+"values": [ 8 ]
 }
 
 [sub_resource type="Animation" id=4]
@@ -160,6 +185,30 @@ tracks/2/keys = {
 "update": 1,
 "values": [ 8 ]
 }
+tracks/3/type = "value"
+tracks/3/path = NodePath(".:collision_layer")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 1 ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath(".:collision_mask")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 7 ]
+}
 
 [sub_resource type="Animation" id=5]
 length = 1.6
@@ -201,6 +250,30 @@ tracks/2/keys = {
 "update": 1,
 "values": [ 8 ]
 }
+tracks/3/type = "value"
+tracks/3/path = NodePath(".:collision_mask")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 7 ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath(".:collision_layer")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 1 ]
+}
 
 [node name="Player" type="KinematicBody2D"]
 collision_mask = 7
@@ -213,9 +286,6 @@ __meta__ = {
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
 
-[node name="Camera2D" type="Camera2D" parent="."]
-current = true
-
 [node name="StateMachine" parent="." instance=ExtResource( 3 )]
 initial_state = NodePath("Idle")
 
@@ -224,6 +294,9 @@ script = ExtResource( 4 )
 
 [node name="Air" type="Node" parent="StateMachine"]
 script = ExtResource( 5 )
+
+[node name="JumpTimer" type="Timer" parent="StateMachine/Air"]
+one_shot = true
 
 [node name="Run" type="Node" parent="StateMachine"]
 script = ExtResource( 6 )
@@ -241,8 +314,8 @@ script = ExtResource( 9 )
 one_shot = true
 
 [node name="Sprite" type="Sprite" parent="."]
-texture = ExtResource( 8 )
-hframes = 8
+texture = ExtResource( 1 )
+hframes = 4
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 playback_process_mode = 2

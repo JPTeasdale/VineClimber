@@ -1,6 +1,8 @@
 extends PlayerState
 # Upon entering the state, we set the Player node's velocity to zero.
 func enter(_msg := {}) -> void:
+	
+	player.reset_rotation()
 	if player.animation.current_animation != 'run':
 		player.animation.play('run')
 

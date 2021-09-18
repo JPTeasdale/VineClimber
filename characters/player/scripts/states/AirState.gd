@@ -4,6 +4,7 @@ func enter(msg := {}) -> void:
 	if player.animation.current_animation != 'run':
 		player.animation.play('run')
 	player.animation.advance(0)
+	$JumpTimer.start(0.15)
 	if msg.has("do_jump"):
 		player.velocity.y = -player.impulse_jump
 
@@ -17,10 +18,14 @@ func physics_update(delta: float) -> void:
 	# Vertical movement.
 	player.velocity.y += player.gravity * delta
 	player.velocity = player.move_and_slide(player.velocity,  Vector2.UP)
+	
+	if not $JumpTimer.is_stopped() and Input.is_action_just_pressed("jump"):
+		player.velocity.y = -player.impulse_jump
+		
 
 	player.update_facing_dir()
 	player.animation.advance(delta)
-	if player.can_climb():
+	if $JumpTimer.is_stopped() && player.can_climb():
 		state_machine.transition_to("Climb")
 		return
 	if player.is_on_floor():
