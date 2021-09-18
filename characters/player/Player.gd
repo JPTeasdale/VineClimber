@@ -59,8 +59,3 @@ func update_facing_dir():
 func reset_rotation():
 	look_at(global_position + Vector2(get_facing_dir(), 0))
 		
-func _draw():
-	draw_line(Vector2.ZERO, Vector2(get_facing_dir() * 8, 0), Color.red, 3)
-
-func _process(delta):
-	update()

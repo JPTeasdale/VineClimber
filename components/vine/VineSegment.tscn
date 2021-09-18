@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://components/vine/VineSegment.gd" type="Script" id=1]
+[ext_resource path="res://components/vine/Tip.gd" type="Script" id=2]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 1.0
+
+[node name="VineSegment" type="RigidBody2D"]
+use_parent_material = true
+collision_layer = 4
+collision_mask = 6
+gravity_scale = 0.2
+can_sleep = false
+script = ExtResource( 1 )
+
+[node name="Anchor" type="PinJoint2D" parent="."]
+use_parent_material = true
+node_a = NodePath("..")
+disable_collision = false
+softness = 0.2
+
+[node name="Line" type="CollisionPolygon2D" parent="."]
+polygon = PoolVector2Array( 0, 0, 0, 0, 0, 0, 0, 0 )
+
+[node name="Tip" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 2
+script = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Tip"]
+position = Vector2( 0, -2 )
+shape = SubResource( 1 )
