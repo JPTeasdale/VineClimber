@@ -4,7 +4,7 @@ var PIECE = preload("res://components/vine/VineSegment.tscn")
 
 signal vine_locked
 
-var growing: bool = true
+var growing: bool = false
 var locked: bool = false
 var dead: bool = false
 
@@ -17,6 +17,7 @@ var segment_max_length: float = 10
 var color: Color = Color("#09902b")
 
 var width = 1
+var segments: Array = []
 
 var SEGMENT = preload("res://components/vine/VineSegment.tscn")
 var TIP = preload("res://components/vine/VineTip.tscn")
@@ -29,7 +30,9 @@ func reset():
 		var root = get_root()
 		root.clear()
 		$Anchor/PinJoint2D.remove_child(root)
-		
+	
+	segments = []
+	width = 1
 	growing = true
 	locked = false
 	dead = false
@@ -45,25 +48,20 @@ func reset():
 	root.mode = RigidBody2D.MODE_STATIC
 	$Anchor/PinJoint2D.add_child(root)
 	root.set_tip(tip)
-	$Anchor/PinJoint2D.node_b = root.get_path()
 	$Anchor/PinJoint2D.disable_collision = false
+	$Anchor/PinJoint2D.node_b = root.get_path()
 	$Anchor/PinJoint2D.disable_collision = true
 	$Life.start(life_duration_s)
+	segments.push_back(root)
 	
 	
 func get_total_length() -> float:
-	var seg = get_root()
-	var length = 0.1
-	while seg:
-		length += seg.length
-		seg = seg.next_segment
-	
-	return length
+	return (segment_max_length * (segments.size() - 1)) + segments.back().length
 
 func _ready():
 	reset()
 	
-func _process(delta):
+func _physics_process(delta):
 	if not locked and $Life.is_stopped():
 		if not dead:
 			dead = true
@@ -76,8 +74,6 @@ func _process(delta):
 		var grow_speed = max_length / (life_duration_s * 100)
 		var percent_complete = 1 - ($Life.time_left / life_duration_s)
 		get_root().grow_length(grow_speed)
-		
-		var total = get_total_length()
 		
 		if percent_complete < 0.8:
 			color = lerp(Color("#09902b"), Color.olive, percent_complete * 1.25)

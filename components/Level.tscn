@@ -3,7 +3,7 @@
 [ext_resource path="res://components/Level.gd" type="Script" id=1]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 288, 160 )
+extents = Vector2( 280, 144 )
 
 [node name="Level" type="Camera2D"]
 script = ExtResource( 1 )

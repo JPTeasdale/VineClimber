@@ -23,6 +23,10 @@ func can_climb() -> bool:
 		) || $FootRay.is_colliding()
 	)
 	
+func reset_transform(global: Transform2D):
+	$StateMachine.transition_to("Idle")
+	global_transform = global
+	
 func get_facing_dir() -> float:
 	return sign(scale.y)
 
@@ -58,4 +62,4 @@ func update_facing_dir():
 	
 func reset_rotation():
 	look_at(global_position + Vector2(get_facing_dir(), 0))
-		
+

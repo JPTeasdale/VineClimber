@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/Mid-Air Machine - At Least It Is.mp3-5bdfab4aa985a70c1922a4df345f326e.mp3str"
+
+[deps]
+
+source_file="res://assets/Mid-Air Machine - At Least It Is.mp3"
+dest_files=[ "res://.import/Mid-Air Machine - At Least It Is.mp3-5bdfab4aa985a70c1922a4df345f326e.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

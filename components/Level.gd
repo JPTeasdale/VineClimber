@@ -11,12 +11,15 @@ func get_temporary_children():
 
 
 func reset_level(player: Player):
+	get_tree().paused = true
 	for c in get_temporary_children():
 		if c is Vine:
 			c.reset()
 		if c is StartPlatform and has_started:
-			player.global_transform = c.global_transform
+			player.reset_transform(c.global_transform)
 		
+	yield(get_tree(), "idle_frame")
+	get_tree().paused = false
 	has_started = true
 	current = true
 		

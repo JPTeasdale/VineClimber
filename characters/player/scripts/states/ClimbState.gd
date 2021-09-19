@@ -71,7 +71,7 @@ func physics_update(delta: float) -> void:
 	player.velocity = player.move_and_slide(player.velocity, Vector2.UP)
 	
 	if is_on_vine():
-		player.get_hand_collider().pull(get_collision_normal())
+		player.get_hand_collider().pull(normal)
 		if sign(input_direction_x) == player.get_facing_dir() && $Cooldown.is_stopped():
 			var st = get_swap_transform()
 			if st:

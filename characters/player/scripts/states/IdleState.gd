@@ -10,9 +10,6 @@ func process(delta: float) -> void:
 	# the character to fall.
 		
 	player.animation.advance(delta)
-	if player.can_climb():
-		state_machine.transition_to("Climb")
-		return
 	if not owner.is_on_floor():
 		state_machine.transition_to("Air")
 		return

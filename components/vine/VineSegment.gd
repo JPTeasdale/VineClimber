@@ -7,6 +7,7 @@ export var length: float = 0 setget set_length
 
 var dead = false
 var vine = null
+var vine_position: int = 0
 
 var points: PoolVector2Array = PoolVector2Array()
 var prev_segment = null 
@@ -53,6 +54,8 @@ func grow_length(growth: float):
 		newSegment.vine = vine
 		newSegment.length = 0
 		newSegment.rotation = vine.segment_rotation
+		newSegment.vine_position = vine_position + 1
+		vine.segments.push_back(newSegment)
 		set_next_segment(newSegment)
 		
 func set_next_segment(seg: VineSegment):
@@ -63,12 +66,7 @@ func set_next_segment(seg: VineSegment):
 	next_segment = seg
 	
 func get_length_to_start()-> float: 
-	var s: VineSegment = prev_segment
-	var length = 0
-	while s: 
-		length += s.length
-		s = s.prev_segment
-	return length
+	return vine_position * vine.segment_max_length
 
 func set_length(l: float):
 	length = l
@@ -105,19 +103,16 @@ func recompute_points():
 		var top_right = Vector2(0, -length) + Vector2.RIGHT.rotated(next_segment.rotation/2) * end_width
 		new_points.append(top_right)
 		
-	
-	points = new_points
+	if not Geometry.triangulate_polygon(new_points).empty():
+		points = new_points
 
 func pull(normal: Vector2):
-	
 	var dot = normal.dot(global_transform.x)
 	var angle = normal.angle_to(global_transform.x)
-	
-	print("dot: ", dot)
-	print("angle: ", angle)
 	if vine.growing:
 		var dir = sign(dot)
-		rotation = lerp_angle(rotation,  dir*(vine.segment_rotation+PI/4), .001 * (vine.max_width - get_start_width()))
+		var width_mod = (vine.max_width - get_start_width()) / vine.max_width
+		rotation = lerp_angle(rotation,  dir*(vine.segment_rotation+PI/4), .01 * width_mod)
 	
 func _draw():
 	if points.size() > 0:
@@ -125,10 +120,9 @@ func _draw():
 		draw_circle(Vector2(0, -length), get_end_width() / 2, vine.color)
 		draw_polygon(points, PoolColorArray([vine.color]))	
 	
-func _process(delta):
+func _physics_process(delta):
 	if not vine.dead:
 		$Anchor.position = Vector2(0, -length)
 		recompute_points()
-	
-	$Line.polygon = points
+		$Line.polygon = points
 	update()
