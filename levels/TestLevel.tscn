@@ -178,6 +178,13 @@ scale = Vector2( 2, 1.25 )
 offset = Vector2( -35.5, 1.14441e-05 )
 region_rect = Rect2( 0, 0, 4, 4 )
 
+[node name="GodRay2" parent="." instance=ExtResource( 3 )]
+position = Vector2( 344, 51 )
+rotation = 1.57079
+scale = Vector2( 2, 1.25 )
+offset = Vector2( -35.5, 1.14441e-05 )
+region_rect = Rect2( 0, 0, 4, 4 )
+
 [node name="Level4" parent="." instance=ExtResource( 5 )]
 position = Vector2( -368, -616 )
 
@@ -310,6 +317,7 @@ position = Vector2( -192, 104 )
 
 [node name="Level6" parent="." instance=ExtResource( 5 )]
 position = Vector2( -944, -1160 )
+preserve_on_exit = false
 
 [node name="GodRay2" parent="Level6" instance=ExtResource( 3 )]
 material = SubResource( 2 )
@@ -326,11 +334,12 @@ max_length = 176.0
 segment_rotation = 0.001
 
 [node name="StartPlatform" parent="Level6" instance=ExtResource( 6 )]
-position = Vector2( 240, 120 )
+position = Vector2( 216, 456 )
 
 [node name="Level5" parent="." instance=ExtResource( 5 )]
 position = Vector2( -944, -840 )
 current = true
+preserve_on_exit = false
 
 [node name="GodRay2" parent="Level5" instance=ExtResource( 3 )]
 material = SubResource( 3 )

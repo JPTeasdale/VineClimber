@@ -1,5 +1,7 @@
 extends Camera2D
 
+
+export var preserve_on_exit: bool = true
 var has_started: bool = false
 		
 func get_temporary_children():
@@ -15,12 +17,12 @@ func reset_level(player: Player):
 	for c in get_temporary_children():
 		if c is Vine:
 			c.reset()
-		if c is StartPlatform and has_started:
+		if c is StartPlatform and player:
 			player.reset_transform(c.global_transform)
 		
 	yield(get_tree(), "idle_frame")
 	get_tree().paused = false
-	has_started = true
+	has_started = preserve_on_exit
 	current = true
 		
 
@@ -30,8 +32,8 @@ func _on_Area2D_body_exited(body):
 
 func _on_Area2D_body_entered(body):
 	current=true
-	if not has_started and body is Player:
-		reset_level(body)
+	if body is Player:
+		reset_level(null)
 		
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
